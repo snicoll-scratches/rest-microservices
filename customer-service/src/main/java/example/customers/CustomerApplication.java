@@ -20,22 +20,15 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.hypermedia.DiscoveredResource;
-import org.springframework.cloud.hypermedia.DynamicServiceInstanceProvider;
-import org.springframework.cloud.hypermedia.ServiceInstanceProvider;
-import org.springframework.cloud.hypermedia.StaticServiceInstanceProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 /**
  * Spring Boot application bootstrap class to run a customer service and configure integration with a remote system that
  * exposes a REST resource to lookup stores by location.
- * 
+ *
  * @author Oliver Gierke
+ * @author Stephane Nicoll
  */
 @SpringBootApplication
 @EnableCircuitBreaker
@@ -45,57 +38,25 @@ public class CustomerApplication {
 		SpringApplication.run(CustomerApplication.class, args);
 	}
 
-	/**
-	 * A remote {@link DiscoveredResource} that provides functionality to lookup stores by location.
-	 * 
-	 * @param provider
-	 * @return
-	 */
-	@Bean
-	public DiscoveredResource storesByLocationResource(ServiceInstanceProvider provider) {
-		return new DiscoveredResource(provider, traverson -> traverson.follow("stores", "search", "by-location"));
-	}
+	@Service
+	static class DataInitializr {
 
-	/**
-	 * A simple default {@link ServiceInstanceProvider} to use a hard-coded remote service to detect the store locations.
-	 * 
-	 * @return
-	 */
-	@Bean
-	@Profile("default")
-	public StaticServiceInstanceProvider staticServiceInstanceProvider() {
-		return new StaticServiceInstanceProvider(new DefaultServiceInstance("stores", "localhost", 8081, false));
-	}
+		private final CustomerRepository customers;
 
-	// Cloud configuration
+		@Autowired
+		public DataInitializr(CustomerRepository customers) {
+			this.customers = customers;
+		}
 
-	/**
-	 * Dedicated configuration to rather use a {@link ServiceInstanceProvider} to lookup the remote service via a service
-	 * registry.
-	 *
-	 * @author Oliver Gierke
-	 */
-	@Profile("cloud")
-	@EnableDiscoveryClient
-	static class CloudConfiguration {
+		@PostConstruct
+		public void init() {
 
-		@Bean
-		public DynamicServiceInstanceProvider dynamicServiceProvider(DiscoveryClient client) {
-			return new DynamicServiceInstanceProvider(client, "stores");
+			Customer customer = new Customer("Oliver", "Gierke");
+			customer.setAddress(
+					new Address("625 Avenue of the Americas", "10011", "New York", new Location(40.740337, -73.995146)));
+
+			customers.save(customer);
 		}
 	}
 
-	// Data setup
-
-	@Autowired CustomerRepository customers;
-
-	@PostConstruct
-	public void init() {
-
-		Customer customer = new Customer("Oliver", "Gierke");
-		customer.setAddress(
-				new Address("625 Avenue of the Americas", "10011", "New York", new Location(40.740337, -73.995146)));
-
-		customers.save(customer);
-	}
 }
