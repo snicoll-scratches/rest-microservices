@@ -15,11 +15,6 @@
  */
 package example.customers;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,17 +23,66 @@ import javax.persistence.Id;
  * @author Oliver Gierke
  */
 @Entity
-@Getter
-@EqualsAndHashCode(of = "id")
-@RequiredArgsConstructor
 public class Customer {
 
 	private @Id @GeneratedValue Long id;
+
 	private final String firstname, lastname;
-	private @Setter Address address;
+
+	private Address address;
+
+	public Customer(String firstname, String lastname) {
+		this.firstname = firstname;
+		this.lastname = lastname;
+	}
 
 	Customer() {
 		this.firstname = null;
 		this.lastname = null;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer{" + "id=" + id +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", address=" + address +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Customer customer = (Customer) o;
+
+		return id != null ? id.equals(customer.id) : customer.id == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
 	}
 }

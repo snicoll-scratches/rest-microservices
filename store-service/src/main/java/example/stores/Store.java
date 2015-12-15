@@ -15,22 +15,21 @@
  */
 package example.stores;
 
-import lombok.Data;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Entity to represent a {@link Store}.
- * 
+ *
  * @author Oliver Gierke
  */
-@Data
 @Document
 public class Store {
 
 	private final @Id String id;
+
 	private final String name;
+
 	private final Address address;
 
 	public Store(String name, Address address) {
@@ -45,5 +44,46 @@ public class Store {
 		this.id = null;
 		this.name = null;
 		this.address = null;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	@Override
+	public String toString() {
+		return "Store{" + "id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", address=" + address +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Store store = (Store) o;
+
+		if (id != null ? !id.equals(store.id) : store.id != null) return false;
+		if (name != null ? !name.equals(store.name) : store.name != null) return false;
+		return address != null ? address.equals(store.address) : store.address == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (address != null ? address.hashCode() : 0);
+		return result;
 	}
 }

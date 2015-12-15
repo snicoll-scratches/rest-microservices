@@ -15,8 +15,6 @@
  */
 package org.springframework.cloud.hypermedia.autoconfig;
 
-import lombok.Data;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -54,17 +52,35 @@ public class CloudHypermediaAutoConfiguration {
 				properties.getRefresh().getInitialDelay());
 	}
 
-	@Data
 	@ConfigurationProperties(prefix = "cloud.hypermedia")
 	public static class CloudHypermediaProperties {
 
 		private Refresh refresh = new Refresh();
 
-		@Data
+		public Refresh getRefresh() {
+			return refresh;
+		}
+
 		public static class Refresh {
 
 			private int fixedDelay = 5000;
 			private int initialDelay = 10000;
+
+			public int getFixedDelay() {
+				return fixedDelay;
+			}
+
+			public void setFixedDelay(int fixedDelay) {
+				this.fixedDelay = fixedDelay;
+			}
+
+			public int getInitialDelay() {
+				return initialDelay;
+			}
+
+			public void setInitialDelay(int initialDelay) {
+				this.initialDelay = initialDelay;
+			}
 		}
 	}
 }

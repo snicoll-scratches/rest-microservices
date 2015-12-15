@@ -17,8 +17,6 @@ package example.customers.integration;
 
 import example.customers.Customer;
 import example.customers.Location;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,15 +33,15 @@ import org.springframework.stereotype.Component;
  * @author Oliver Gierke
  */
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 public class CustomerResourceProcessor implements ResourceProcessor<Resource<Customer>> {
 
-	private final @NonNull DiscoveredResource storesByLocationResource;
+	private final DiscoveredResource storesByLocationResource;
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.springframework.hateoas.ResourceProcessor#process(org.springframework.hateoas.ResourceSupport)
-	 */
+	@Autowired
+	public CustomerResourceProcessor(DiscoveredResource storesByLocationResource) {
+		this.storesByLocationResource = storesByLocationResource;
+	}
+
 	@Override
 	public Resource<Customer> process(Resource<Customer> resource) {
 

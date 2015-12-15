@@ -15,25 +15,23 @@
  */
 package org.springframework.cloud.hypermedia;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.util.Assert;
 
 /**
  * A {@link ServiceInstanceProvider} that will always return the configured {@link ServiceInstance}.
  * 
  * @author Oliver Gierke
  */
-@RequiredArgsConstructor
 public class StaticServiceInstanceProvider implements ServiceInstanceProvider {
 
-	private final @NonNull ServiceInstance instance;
+	private final ServiceInstance instance;
 
-	/* 
-	 * (non-Javadoc)
-	 * @see example.customers.integration.ServiceInstanceProvider#getServiceInstance()
-	 */
+	public StaticServiceInstanceProvider(ServiceInstance instance) {
+		Assert.notNull(instance, "instance must not be null");
+		this.instance = instance;
+	}
+
 	@Override
 	public ServiceInstance getServiceInstance() {
 		return instance;

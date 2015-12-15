@@ -17,21 +17,59 @@ package example.customers;
 
 import javax.persistence.Embeddable;
 
-import lombok.AllArgsConstructor;
-import lombok.Value;
 
 /**
  * @author Oliver Gierke
  */
-@Value
 @Embeddable
-@AllArgsConstructor
 public class Location {
 
 	private final double latitude, longitude;
 
+	public Location(double latitude, double longitude) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+
 	protected Location() {
-		this.latitude = 0.0;
-		this.longitude = 0.0;
+		this(0.0, 0.0);
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	@Override
+	public String toString() {
+		return "Location{" + "latitude=" + latitude +
+				", longitude=" + longitude +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Location location = (Location) o;
+
+		if (Double.compare(location.latitude, latitude) != 0) return false;
+		return Double.compare(location.longitude, longitude) == 0;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(latitude);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 }

@@ -15,8 +15,6 @@
  */
 package org.springframework.cloud.hypermedia;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
@@ -25,16 +23,16 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
  * 
  * @author Oliver Gierke
  */
-@RequiredArgsConstructor
 public class DynamicServiceInstanceProvider implements ServiceInstanceProvider {
 
 	private final DiscoveryClient client;
 	private final String serviceName;
 
-	/* 
-	 * (non-Javadoc)
-	 * @see example.customers.integration.ServiceInstanceProvider#getServiceInstance()
-	 */
+	public DynamicServiceInstanceProvider(DiscoveryClient client, String serviceName) {
+		this.client = client;
+		this.serviceName = serviceName;
+	}
+
 	@Override
 	public ServiceInstance getServiceInstance() {
 		return client.getInstances(serviceName).stream().findFirst().orElseThrow(() -> new RuntimeException());

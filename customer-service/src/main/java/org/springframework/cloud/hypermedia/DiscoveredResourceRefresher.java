@@ -15,9 +15,6 @@
  */
 package org.springframework.cloud.hypermedia;
 
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +28,16 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
  * 
  * @author Oliver Gierke
  */
-@RequiredArgsConstructor
 public class DiscoveredResourceRefresher extends ContextLifecycleScheduledTaskRegistrar {
 
 	private final int fixedDelay, initialDelay;
 
-	private @Setter(onMethod = @__(@Autowired) ) List<DiscoveredResource> discoveredResources;
+	private List<DiscoveredResource> discoveredResources;
+
+	public DiscoveredResourceRefresher(int fixedDelay, int initialDelay) {
+		this.fixedDelay = fixedDelay;
+		this.initialDelay = initialDelay;
+	}
 
 	/* 
 	 * (non-Javadoc)
@@ -50,5 +51,10 @@ public class DiscoveredResourceRefresher extends ContextLifecycleScheduledTaskRe
 		});
 
 		super.afterPropertiesSet();
+	}
+
+	@Autowired
+	public void setDiscoveredResources(List<DiscoveredResource> discoveredResources) {
+		this.discoveredResources = discoveredResources;
 	}
 }

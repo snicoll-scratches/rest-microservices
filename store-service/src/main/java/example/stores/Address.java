@@ -15,8 +15,6 @@
  */
 package example.stores;
 
-import lombok.Value;
-
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 
@@ -25,9 +23,63 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
  * 
  * @author Oliver Gierke
  */
-@Value
 public class Address {
 
 	private final String street, city, zip;
 	private final @GeoSpatialIndexed Point location;
+
+	public Address(String street, String city, String zip, Point location) {
+		this.street = street;
+		this.city = city;
+		this.zip = zip;
+		this.location = location;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public Point getLocation() {
+		return location;
+	}
+
+	@Override
+	public String toString() {
+		return "Address{" + "street='" + street + '\'' +
+				", city='" + city + '\'' +
+				", zip='" + zip + '\'' +
+				", location=" + location +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Address address = (Address) o;
+
+		if (street != null ? !street.equals(address.street) : address.street != null) return false;
+		if (city != null ? !city.equals(address.city) : address.city != null) return false;
+		if (zip != null ? !zip.equals(address.zip) : address.zip != null) return false;
+		return location != null ? location.equals(address.location) : address.location == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = street != null ? street.hashCode() : 0;
+		result = 31 * result + (city != null ? city.hashCode() : 0);
+		result = 31 * result + (zip != null ? zip.hashCode() : 0);
+		result = 31 * result + (location != null ? location.hashCode() : 0);
+		return result;
+	}
 }

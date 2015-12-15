@@ -15,10 +15,6 @@
  */
 package org.springframework.cloud.hypermedia;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Optional;
 
 import org.springframework.cloud.client.ServiceInstance;
@@ -31,21 +27,44 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A REST resource that is defined by a service reference and a traversal operation within that service.
  *
  * @author Oliver Gierke
  */
-@Slf4j
-@RequiredArgsConstructor
 public class DiscoveredResource {
+
+	private static final Logger logger = LoggerFactory.getLogger(DiscoveredResource.class);
 
 	private final ServiceInstanceProvider provider;
 	private final RestOperations restOperations = new RestTemplate();
 	private final TraversalDefinition traversal;
 
-	private @Getter Optional<Link> link = Optional.empty();
+	private Optional<Link> link = Optional.empty();
+
+	public DiscoveredResource(ServiceInstanceProvider provider, TraversalDefinition traversal) {
+		this.provider = provider;
+		this.traversal = traversal;
+	}
+
+	public ServiceInstanceProvider getProvider() {
+		return provider;
+	}
+
+	public RestOperations getRestOperations() {
+		return restOperations;
+	}
+
+	public TraversalDefinition getTraversal() {
+		return traversal;
+	}
+
+	public Optional<Link> getLink() {
+		return link;
+	}
 
 	/**
 	 * Verifies the link to the currently discovered resource or triggers rediscovery.
@@ -77,15 +96,15 @@ public class DiscoveredResource {
 
 			String uri = link.expand().getHref();
 
-			log.debug("Verifying link pointing to {}…", uri);
+			logger.debug("Verifying link pointing to {}…", uri);
 			restOperations.headForHeaders(uri);
-			log.debug("Successfully verified link!");
+			logger.debug("Successfully verified link!");
 
 			return Optional.of(link);
 
 		} catch (RestClientException o_O) {
 
-			log.debug("Verification failed, marking as outdated!");
+			logger.debug("Verification failed, marking as outdated!");
 			throw o_O;
 		}
 	}
@@ -100,12 +119,12 @@ public class DiscoveredResource {
 
 		ServiceInstance service = provider.getServiceInstance();
 
-		log.debug("Discovered {} system at {}. Discovering resource…", service.getServiceId(), service.getUri());
+		logger.debug("Discovered {} system at {}. Discovering resource…", service.getServiceId(), service.getUri());
 
 		Traverson traverson = new Traverson(service.getUri(), MediaTypes.HAL_JSON);
 		Link link = traversal.buildTraversal(traverson).asTemplatedLink();
 
-		log.debug("Found link pointing to {}.", link.getHref());
+		logger.debug("Found link pointing to {}.", link.getHref());
 
 		return Optional.of(link);
 	}

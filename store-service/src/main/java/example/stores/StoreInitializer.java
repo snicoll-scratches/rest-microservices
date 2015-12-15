@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -40,9 +41,10 @@ import org.springframework.validation.BindException;
  * 
  * @author Oliver Gierke
  */
-@Slf4j
 @Component
 public class StoreInitializer {
+
+	private static final Logger logger = LoggerFactory.getLogger(StoreInitializer.class);
 
 	@Autowired
 	public StoreInitializer(StoreRepository repository, MongoOperations operations) throws Exception {
@@ -52,9 +54,9 @@ public class StoreInitializer {
 		}
 
 		List<Store> stores = readStores();
-		log.info("Importing {} stores into MongoDB…", stores.size());
+		logger.info("Importing {} stores into MongoDB…", stores.size());
 		repository.save(stores);
-		log.info("Successfully imported {} stores.", repository.count());
+		logger.info("Successfully imported {} stores.", repository.count());
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class StoreInitializer {
 		return stores;
 	}
 
-	private static enum StoreFieldSetMapper implements FieldSetMapper<Store> {
+	private enum StoreFieldSetMapper implements FieldSetMapper<Store> {
 
 		INSTANCE;
 
