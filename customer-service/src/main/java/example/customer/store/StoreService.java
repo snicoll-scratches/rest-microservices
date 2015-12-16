@@ -1,7 +1,9 @@
 package example.customer.store;
 
 import java.util.Collection;
+import java.util.Collections;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import example.customer.domain.Customer;
 import example.customer.domain.Location;
 
@@ -29,6 +31,7 @@ public class StoreService {
 		this.restOperations = restOperations;
 	}
 
+	@HystrixCommand(fallbackMethod = "fallbackFetchStoreNearbyFor")
 	public Collection<Store> fetchStoreNearbyFor(Customer customer, String distance) {
 		Location location = customer.getAddress().getLocation();
 		String locationParam = String.format("%s,%s",
@@ -50,6 +53,10 @@ public class StoreService {
 				});
 
 		return result.getBody().getContent();
+	}
+
+	public Collection<Store> fallbackFetchStoreNearbyFor(Customer customer, String distance) {
+		return Collections.emptyList();
 	}
 
 }
