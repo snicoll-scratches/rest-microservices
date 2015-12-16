@@ -2,7 +2,6 @@ package example.customer.store;
 
 import java.util.Collection;
 
-import example.customer.config.CustomerProperties;
 import example.customer.domain.Customer;
 import example.customer.domain.Location;
 
@@ -24,12 +23,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class StoreService {
 
 	private final RestOperations restOperations;
-	private final CustomerProperties customerProperties;
 
 	@Autowired
-	public StoreService(RestOperations restOperations, CustomerProperties customerProperties) {
+	public StoreService(RestOperations restOperations) {
 		this.restOperations = restOperations;
-		this.customerProperties = customerProperties;
 	}
 
 	public Collection<Store> fetchStoreNearbyFor(Customer customer, String distance) {
@@ -39,7 +36,7 @@ public class StoreService {
 
 
 		UriComponentsBuilder builder = UriComponentsBuilder
-				.fromHttpUrl(customerProperties.getStore().getSearchUrlFor("findByAddressLocationNear"))
+				.fromHttpUrl("http://store-service/stores/search/findByAddressLocationNear")
 				.queryParam("size", 5)
 				.queryParam("location", locationParam)
 				.queryParam("distance", distance);
