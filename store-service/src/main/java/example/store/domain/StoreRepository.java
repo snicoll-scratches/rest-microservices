@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.stores;
+package example.store.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 /**
  * Repository interface for out-of-the-box paginating access to {@link Store}s and a query method to find stores by
  * location and distance.
- * 
+ *
  * @author Oliver Gierke
  */
 public interface StoreRepository extends PagingAndSortingRepository<Store, String> {

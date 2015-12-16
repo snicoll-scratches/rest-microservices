@@ -13,49 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.stores;
+package example.customer.domain;
 
-import org.springframework.data.geo.Point;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import javax.persistence.Embeddable;
 
 /**
- * Value object to represent an {@link Address}.
- * 
  * @author Oliver Gierke
  */
+@Embeddable
 public class Address {
 
-	private final String street, city, zip;
-	private final @GeoSpatialIndexed Point location;
+	private final String street, zipCode, city;
 
-	public Address(String street, String city, String zip, Point location) {
+	private final Location location;
+
+	public Address(String street, String zipCode, String city, Location location) {
 		this.street = street;
+		this.zipCode = zipCode;
 		this.city = city;
-		this.zip = zip;
 		this.location = location;
+	}
+
+	protected Address() {
+		this(null, null, null, null);
 	}
 
 	public String getStreet() {
 		return street;
 	}
 
+	public String getZipCode() {
+		return zipCode;
+	}
+
 	public String getCity() {
 		return city;
 	}
 
-	public String getZip() {
-		return zip;
-	}
-
-	public Point getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
 	@Override
 	public String toString() {
 		return "Address{" + "street='" + street + '\'' +
+				", zipCode='" + zipCode + '\'' +
 				", city='" + city + '\'' +
-				", zip='" + zip + '\'' +
 				", location=" + location +
 				'}';
 	}
@@ -68,8 +71,8 @@ public class Address {
 		Address address = (Address) o;
 
 		if (street != null ? !street.equals(address.street) : address.street != null) return false;
+		if (zipCode != null ? !zipCode.equals(address.zipCode) : address.zipCode != null) return false;
 		if (city != null ? !city.equals(address.city) : address.city != null) return false;
-		if (zip != null ? !zip.equals(address.zip) : address.zip != null) return false;
 		return location != null ? location.equals(address.location) : address.location == null;
 
 	}
@@ -77,8 +80,8 @@ public class Address {
 	@Override
 	public int hashCode() {
 		int result = street != null ? street.hashCode() : 0;
+		result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
 		result = 31 * result + (city != null ? city.hashCode() : 0);
-		result = 31 * result + (zip != null ? zip.hashCode() : 0);
 		result = 31 * result + (location != null ? location.hashCode() : 0);
 		return result;
 	}

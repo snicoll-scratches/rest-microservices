@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.stores;
+package example.store;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 /**
  * Spring configuration class main application bootstrap point.
- * 
+ *
  * @author Oliver Gierke
+ * @author Stephane Nicoll
  */
 @SpringBootApplication
-@EnableDiscoveryClient
 public class StoreApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(StoreApplication.class, args);
 	}
 
-	@Configuration
-	@Profile("cloud")
-	@EnableDiscoveryClient
-	static class CloudConfig {}
 }

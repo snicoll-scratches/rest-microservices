@@ -13,29 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.customers;
+package example.customer;
 
 import javax.annotation.PostConstruct;
+
+import example.customer.domain.Address;
+import example.customer.domain.Customer;
+import example.customer.domain.CustomerRepository;
+import example.customer.domain.Location;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
- * Spring Boot application bootstrap class to run a customer service and configure integration with a remote system that
- * exposes a REST resource to lookup stores by location.
+ * Spring Boot application bootstrap class to run a customer service and
+ * configure integration with a remote system that exposes a REST resource
+ * to lookup stores by location.
  *
  * @author Oliver Gierke
  * @author Stephane Nicoll
  */
 @SpringBootApplication
-@EnableCircuitBreaker
 public class CustomerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerApplication.class, args);
+	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 	@Service

@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.stores;
+package example.store;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import example.store.domain.Address;
+import example.store.domain.Store;
+import example.store.domain.StoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +41,7 @@ import org.springframework.validation.BindException;
 
 /**
  * Component initializing a hand full of Starbucks stores and persisting them through a {@link StoreRepository}.
- * 
+ *
  * @author Oliver Gierke
  */
 @Component
@@ -62,7 +65,7 @@ public class StoreInitializer {
 	/**
 	 * Reads a file {@code starbucks.csv} from the class path and parses it into {@link Store} instances about to
 	 * persisted.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
